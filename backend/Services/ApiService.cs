@@ -31,6 +31,7 @@ public class ApiService : IApiService
 
     public async Task<IList<Coin>> GetCoins(string apiKey)
     {
+
         Url +=
             $"/cryptocurrency/quotes/latest?CMC_PRO_API_KEY={apiKey}&symbol={Symbol}&convert=USD";
 
@@ -45,21 +46,27 @@ public class ApiService : IApiService
                 if (!string.IsNullOrEmpty(responseBody))
                 {
                     dynamic coinData = JsonConvert.DeserializeObject<dynamic>(responseBody);
+                    var data = coinData?.data;
+
 
                     foreach (var item in Coins)
                     {
-                        Name = coinData.data[item][0].name.ToString();
-                        Price = decimal.Parse(
-                            coinData.data[item][0].quote[Money].price.Value.ToString()
-                        );
-                        CoinList.Add(
-                            new Coin
-                            {
-                                Name = Name,
-                                Symbol = item,
-                                Price = Price
-                            }
-                        );
+                        Name = coinData.data[item]?[0].name.ToString();
+
+                        if (Name != null)
+                        {
+                            Price = decimal.Parse(
+                                coinData.data[item][0].quote[Money].price.Value.ToString()
+                            );
+                            CoinList.Add(
+                                new Coin
+                                {
+                                    Name = Name,
+                                    Symbol = item,
+                                    Price = Price
+                                }
+                            );
+                        }
                     }
                     return CoinList;
                 }
@@ -105,16 +112,19 @@ public class ApiService : IApiService
                     {
                         dynamic coinData = JsonConvert.DeserializeObject<dynamic>(responseBody);
 
-                        Name = coinData.data[0].name.ToString();
-                        Price = decimal.Parse(coinData.data[0].quote[item].price.Value.ToString());
-                        CoinList.Add(
-                            new Coin
-                            {
-                                Name = Name,
-                                Symbol = item,
-                                Price = Price
-                            }
-                        );
+                        Name = coinData.data[0]?.name?.ToString();
+                        if (Name != null)
+                        {
+                            Price = decimal.Parse(coinData.data[0].quote[item].price.Value.ToString());
+                            CoinList.Add(
+                                new Coin
+                                {
+                                    Name = Name,
+                                    Symbol = item,
+                                    Price = Price
+                                }
+                            );
+                        }
                     }
                 }
                 Url = Url.Replace($"convert={item}", "convert=");

@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { CoinModel } from 'src/app/models/coin-model';
-
 
 @Injectable({
   providedIn: 'root'
 })
-export class CoinCurrencyService{
-  private readonly apiUrl = 'http://localhost:5209/api'; // URL de la API
+export class CoinCurrencyService {
+  private readonly apiUrl = 'http://localhost:5209/api'; // Url de la api
   apiKey: string = "";
+
   constructor(private http: HttpClient) { }
 
   saveApiKey(apiKey: string): void {
@@ -20,19 +21,29 @@ export class CoinCurrencyService{
     return localStorage.getItem('apiKey') || '';
   }
 
-  // Método que consume la API para obtener la lista de monedas
-  public getCoins(): Observable<CoinModel[]> {const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'});
+  // Consumir la API para obtener la lista de monedas
+  public getCoins(): Observable<CoinModel[]> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
     this.apiKey = this.getApiKey();
     const url = `${this.apiUrl}/getcoins/${this.apiKey}`;
-    return this.http.get<CoinModel[]>(url,{headers});
+    return this.http.get<CoinModel[]>(url, { headers }).pipe(
+      catchError(err => {
+        return throwError('Error al obtener las monedas');
+      })
+    );
   }
 
-  // Método que consume la API para convertir una criptomoneda en varias monedas
+  // Consumir la API para convertir una moneda
   public convertCryptoCurrency(fromSymbol: string, amount: number): Observable<CoinModel[]> {
     this.apiKey = this.getApiKey();
-    const url = `${this.apiUrl}/getconversion/${this.apiKey}/${fromSymbol}/${amount}`; // URL completa para llamar al endpoint
-    return this.http.get<CoinModel[]>(url); // Llamada GET a la API y retorno de la lista de monedas convertidas
+    const url = `${this.apiUrl}/getconversion/${this.apiKey}/${fromSymbol}/${amount}`;
+    return this.http.get<CoinModel[]>(url).pipe(
+      catchError(err => {
+        return throwError(`Error al convertir la moneda ${fromSymbol}`);
+      })
+    );
   }
 }
