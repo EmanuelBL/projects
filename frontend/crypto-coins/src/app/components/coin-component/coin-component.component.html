@@ -1,0 +1,93 @@
+<div class="container mt-5">
+  <legend class="alert alert-info text-center">Coin Currency</legend>
+  <form [formGroup]="form">
+      <div *ngIf="showApiKeyForm" class="form-group text-center">
+      <label class="text-center display-5">ApiKey</label>
+      <input
+        class="form-control"
+        type="text"
+        id="apiKey"
+        formControlName="apiKey"
+      />
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        (click)="saveApiKey()"
+      >
+      Enviar
+    </button></div>
+
+  <div *ngIf="!showApiKeyForm">
+    <div class="form-group text-center">
+
+
+      <div id="consultar">
+        <label>Selecciona una moneda:</label>
+        <select id="type" formControlName="type">
+          <option *ngFor="let symbol of symbols" [value]="symbol">
+            {{ symbol }}
+          </option>
+        </select>
+        <div>
+          <label>Seleccione una cantidad:</label>
+          <input type="text" id="amount" formControlName="amount"  (keydown)="onKeyDown($event)"/>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary w-20"[disabled]="loading"
+          (click)="convertCurrency()"
+        >
+          Enviar
+        </button>
+      </div>
+    </div>
+
+    <label *ngIf="convertedCoins.length > 0" class="text-center display-7"
+      >Lista convertida</label
+    >
+
+    <table *ngIf="convertedCoins.length > 0" class="table">
+      <thead>
+        <tr>
+          <th>De tipo</th>
+          <th>A tipo</th>
+          <th class="text-end">Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let coin of convertedCoins">
+          <td>{{ coin.name }}</td>
+          <td>{{ coin.symbol }}</td>
+          <td class="text-end pe-3">{{ coin.price }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <label class="text-center display-6">Lista de Criptos</label>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Simbolo</th>
+          <th class="text-end">Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let coin of coins">
+          <td>{{ coin.name }}</td>
+          <td>{{ coin.symbol }}</td>
+          <td class="text-end pe-5">u$d {{ coin.price }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button
+        type="submit"
+        class="btn btn-danger w-100 "
+        (click)="logout()"
+      >
+      salir
+    </button>
+  </div>
+  </form>
+</div>
