@@ -6,6 +6,6 @@ Hice más a menos lo que se me ocurrió que quedaría medianamente bonito, se qu
 
 Los test unitarios, no me están andando, la extensión rompe y no me da mucha información al respecto. No pude encontrar el error, aun así los deje ahí por las dudas.
 
-Una observación con respecto al endpoint en c# de convertir la moneda, tuve que hacer varias llamadas ya que por mi tipo de cuenta no me permite hacer un filtro del symbol para realizar una sola.
+Una observación con respecto al endpoint en c# de convertir la moneda, tuve que hacer varias llamadas ya que por mi tipo de cuenta no me permite hacer un filtro del symbol de varias monedas en una sola.
 
 Ante cualquier duda estoy a disposición
