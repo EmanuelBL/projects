@@ -31,7 +31,7 @@ export class CoinCurrencyService {
     const url = `${this.apiUrl}/getcoins/${this.apiKey}`;
     return this.http.get<CoinModel[]>(url, { headers }).pipe(
       catchError(err => {
-        return throwError('Error al obtener las monedas');
+        return throwError('Error al obtener las monedas', err.message);
       })
     );
   }
@@ -42,7 +42,7 @@ export class CoinCurrencyService {
     const url = `${this.apiUrl}/getconversion/${this.apiKey}/${fromSymbol}/${amount}`;
     return this.http.get<CoinModel[]>(url).pipe(
       catchError(err => {
-        return throwError(`Error al convertir la moneda ${fromSymbol}`);
+        return throwError(`Error al convertir la moneda ${fromSymbol}`, err.message);
       })
     );
   }
