@@ -28,7 +28,7 @@ export class CoinCurrencyService {
       'Access-Control-Allow-Origin': '*'
     });
     this.apiKey = this.getApiKey();
-    const url = `${this.apiUrl}/getcoins/${this.apiKey}`;
+    const url = `${this.apiUrl}/coins/${this.apiKey}`;
     return this.http.get<CoinModel[]>(url, { headers }).pipe(
       catchError(err => {
         return throwError('Error al obtener las monedas', err.message);
@@ -39,7 +39,7 @@ export class CoinCurrencyService {
   // Consumir la API para convertir una moneda
   public convertCryptoCurrency(fromSymbol: string, amount: number): Observable<CoinModel[]> {
     this.apiKey = this.getApiKey();
-    const url = `${this.apiUrl}/getconversion/${this.apiKey}/${fromSymbol}/${amount}`;
+    const url = `${this.apiUrl}/conversion/${this.apiKey}/${fromSymbol}/${amount}`;
     return this.http.get<CoinModel[]>(url).pipe(
       catchError(err => {
         return throwError(`Error al convertir la moneda ${fromSymbol}`, err.message);

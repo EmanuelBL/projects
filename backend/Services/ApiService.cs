@@ -10,22 +10,21 @@ namespace backend.Services;
 
 public class ApiService : IApiService
 {
-    HttpClient HttpClient;
+    public HttpClient HttpClient;
     string Url;
     string Symbol;
     IList<Coin> CoinList;
     string[]? Coins;
     string Name;
     decimal? Price;
-    HttpResponseMessage Response;
     string Money;
+    HttpResponseMessage Response;
 
     public ApiService(IConfiguration c)
     {
         Symbol = c.GetValue<string>("symbols");
         Url = c.GetValue<string>("url");
         Coins = Symbol.Split(",");
-        HttpClient = new();
         Money = c.GetValue<string>("money");
     }
 
@@ -37,6 +36,7 @@ public class ApiService : IApiService
 
         try
         {
+            HttpClient = new();
             Response = await HttpClient.GetAsync(Url);
 
             if (Response.IsSuccessStatusCode)
@@ -45,49 +45,52 @@ public class ApiService : IApiService
                 string responseBody = await Response.Content.ReadAsStringAsync();
                 if (!string.IsNullOrEmpty(responseBody))
                 {
-                    dynamic coinData = JsonConvert.DeserializeObject<dynamic>(responseBody);
-                    var data = coinData?.data;
-
-
-                    foreach (var item in Coins)
-                    {
-                        Name = coinData.data[item]?[0].name.ToString();
-
-                        if (Name != null)
-                        {
-                            Price = decimal.Parse(
-                                coinData.data[item][0].quote[Money].price.Value.ToString()
-                            );
-                            CoinList.Add(
-                                new Coin
-                                {
-                                    Name = Name,
-                                    Symbol = item,
-                                    Price = Price
-                                }
-                            );
-                        }
-                    }
-                    return CoinList;
+                    CoinList = GetCoinsList(responseBody);
                 }
+                return CoinList;
             }
 
             return null;
         }
         catch (HttpRequestException ex)
         {
-            throw new ApiException(Response, "Error en la solicitud Http", ex);
+            throw new ApiException(Response, "Error en la solicitud Http");
         }
         catch (Exception ex)
         {
-            throw ex;
+            throw new ApiException(Response, "Error inesperado", ex);
         }
         finally
         {
             HttpClient.Dispose();
         }
     }
+    private IList<Coin> GetCoinsList(string responseBody)
+    {
+        dynamic coinData = JsonConvert.DeserializeObject<dynamic>(responseBody);
 
+        foreach (var item in Coins)
+        {
+            Name = coinData.data[item]?[0].name.ToString();// se utiliza el indice cero ya que se examino el Json de la respuesta y ese era el path 
+
+            if (Name != null)
+            {
+                Price = decimal.Parse(
+                    coinData.data[item][0].quote[Money].price.Value.ToString()// se utiliza el indice cero ya que se examino el Json de la respuesta y ese era el path
+                );
+                CoinList.Add(
+                    new Coin
+                    {
+                        Name = Name,
+                        Symbol = item,
+                        Price = Price
+                    }
+                );
+            }
+        }
+        return CoinList;
+
+    }
     public async Task<IList<Coin>> ConvertCryptoCurrency(
         string apiKey,
         string fromSymbol,
@@ -96,6 +99,7 @@ public class ApiService : IApiService
     {
         try
         {
+            HttpClient = new();
             CoinList = new List<Coin>();
             Url +=
                 $"/tools/price-conversion?CMC_PRO_API_KEY={apiKey}&amount={amount}&symbol={fromSymbol}&convert=";
@@ -135,15 +139,16 @@ public class ApiService : IApiService
         }
         catch (HttpRequestException ex)
         {
-            throw new ApiException(Response, "Error en la solicitud Http", ex);
+            throw new ApiException(Response, "Error en la solicitud Http");
         }
         catch (Exception ex)
         {
-            throw ex;
+            throw new ApiException(Response, "Error inesperado", ex); ;
         }
         finally
         {
             HttpClient.Dispose();
         }
+
     }
 }

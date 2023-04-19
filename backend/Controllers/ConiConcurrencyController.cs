@@ -18,7 +18,7 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("getcoins/{apiKey}")]
+        [Route("coins/{apiKey}")]
         public async Task<IActionResult> GetCoins(string apiKey)
         {
             try
@@ -44,7 +44,7 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("getconversion/{apiKey}/{fromSymbol}/{amount}")]
+        [Route("conversion/{apiKey}/{fromSymbol}/{amount}")]
         public async Task<IActionResult> ConvertCryptoCurrency(string apiKey, string fromSymbol, decimal amount)
         {
             try
