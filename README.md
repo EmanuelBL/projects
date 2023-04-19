@@ -1,5 +1,7 @@
 Dejo el proyecto pedido!
 
+El Front lo hice en angular 14.
+
 Hice más a menos lo que se me ocurrió que quedaría medianamente bonito, se que se puede mejorar todo muchísimo mas y que me probablemente me estoy olvidando de cosas, lamentablemente no cuento últimamente con mucho tiempo para perfeccionarlo mas y solucionar algún problema de inconsistencia que pueda quedar.
 
 Los test unitarios, no me están andando, la extensión rompe y no me da mucha información al respecto. No pude encontrar el error, aun así los deje ahí por las dudas.
