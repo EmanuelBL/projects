@@ -32,6 +32,7 @@ export class CoinComponent implements OnInit {
   }
 
   ngOnInit() {
+   if(localStorage.getItem('apiKey')) this.showApiKeyForm=false;
     this.loadCoins();
     setInterval(() => {
       this.loadCoins();
@@ -108,7 +109,7 @@ export class CoinComponent implements OnInit {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    // Obtener el código de la tecla presionada
+    // Obtener el código de la tecla presionadaf
     const keyCode = event.keyCode || event.which;
 
     // Permitir números, decimales, teclas de navegación (flechas), borrar y retroceso
