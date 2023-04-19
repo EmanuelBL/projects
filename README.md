@@ -1,6 +1,6 @@
 Dejo el proyecto pedido!
 
-El Front lo hice en angular 14.
+El front lo hice en angular 14.
 
 Hice más a menos lo que se me ocurrió que quedaría medianamente bonito, se que se puede mejorar todo muchísimo mas y que me probablemente me estoy olvidando de cosas, lamentablemente no cuento últimamente con mucho tiempo para perfeccionarlo mas y solucionar algún problema de inconsistencia que pueda quedar.
 
